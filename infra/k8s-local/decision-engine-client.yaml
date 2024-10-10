@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: decision-loop-client-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: decision-loop-client
+  template:
+    metadata:
+      labels:
+        app: decision-loop-client
+    spec:
+      containers:
+        - name: decision-loop-client
+          image: decision-loop/decision-loop-client
+          imagePullPolicy: Never
+          env:
+            - name: NEXT_PUBLIC_API_SERVER_BASE_URL
+              value: 'https://app.qa.lendinfra.com/'
+            - name: ENVIRONMENT
+              value: 'local-docker'
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: decision-loop-client-srv
+spec:
+  selector:
+    app: decision-loop-client
+  ports:
+    - name: decision-loop-client
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

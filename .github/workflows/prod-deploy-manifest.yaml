@@ -1,0 +1,99 @@
+name: Dev:Deploy Infra to EKS - Prod
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'infra/k8s-prod/**'
+
+env:
+  DEV_SERVER_DEPLOYMENT_NAME: decision-loop-server-depl
+  DEV_CLIENT_DEPLOYMENT_NAME: decision-loop-client-depl
+  ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}  # Replace with your ECR registry URL, e.g., 123456789012.dkr.ecr.us-east-1.amazonaws.com
+  SERVER_IMAGE_TAG: latest  # Replace with your desired Docker image tag
+  CLIENT_IMAGE_TAG: latest  # Replace with your desired Docker image tag
+  SERVER_IMAGE_NAME: server-prod
+  CLIENT_IMAGE_NAME: client-prod
+  SERVER_PORT: 3000
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup server, client and load balancer
+    runs-on: ubuntu-latest
+    environment: live
+
+    env:
+      MY_PATH: /usr/bin/python2.7
+      DECISION_ENGINE_DB_URI_PROD: ${{ secrets.DECISION_ENGINE_DB_URI_PROD }}
+      JWT_KEY: ${{ secrets.JWT_KEY_PROD }}
+      EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS_PROD }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD_PROD }}
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}  # Replace with your AWS region, e.g., us-east-1
+
+      - name: Install Docker CLI
+        run: |
+          sudo apt-get update
+          sudo apt install apt-transport-https ca-certificates curl software-properties-common
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
+          sudo apt update
+          sudo apt install docker-ce docker-ce-cli containerd.io
+          sudo systemctl start docker
+          sudo systemctl enable docker
+          docker --version
+
+      - name: Authenticate with EKS
+        run: aws eks update-kubeconfig --name ${{ secrets.PROD_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
+
+      - name: Set up Kustomize
+        run: |-
+          cd infra/k8s-prod/client
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x kustomize
+
+      - name: Deploy client
+        run: |-
+          cd infra/k8s-prod/client
+          ./kustomize edit set image ${ECR_REGISTRY}/${IMAGE_NAME}:${CLIENT_IMAGE_TAG}=${ECR_REGISTRY}/${IMAGE_NAME}:${CLIENT_IMAGE_TAG}
+          ./kustomize build . | kubectl apply -f -
+          kubectl rollout restart deployment ${DEV_CLIENT_DEPLOYMENT_NAME}
+          kubectl get services -o wide
+
+      - name: Set up Kustomize
+        run: |-
+          cd infra/k8s-prod/server
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x kustomize
+
+      - name: Deploy server
+        run: |-
+          cd infra/k8s-prod/server
+          ./kustomize edit set image ${ECR_REGISTRY}/${IMAGE_NAME}:${SERVER_IMAGE_TAG}=${ECR_REGISTRY}/${IMAGE_NAME}:${SERVER_IMAGE_TAG}
+          ./kustomize edit add secret decision-loop-server-depl --from-literal=decision-engine-db-uri-prod=${DECISION_ENGINE_DB_URI_PROD}
+          ./kustomize edit add secret decision-loop-server-depl --from-literal=jwt-key=${JWT_KEY}
+          ./kustomize edit add secret decision-loop-server-depl --from-literal=port=${SERVER_PORT}
+          ./kustomize edit add secret decision-loop-server-depl --from-literal=email_address=${EMAIL_ADDRESS}
+          ./kustomize edit add secret decision-loop-server-depl --from-literal=email_password=${EMAIL_PASSWORD}
+          ./kustomize build . | kubectl apply -f -
+          kubectl rollout restart deployment ${DEV_SERVER_DEPLOYMENT_NAME}
+          kubectl get services -o wide
+
+      # Deploy the common infra
+      - name: Deploy common
+        run: |-
+          kubectl apply -f infra/k8s-prod/common

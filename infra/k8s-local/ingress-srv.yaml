@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  rules:
+    - host: app.qa.lendinfra.com
+      http:
+        paths:
+          - path: /api/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: decision-loop-server-srv
+                port:
+                  number: 3000
+          - path: /events/?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: decision-loop-server-srv
+                port:
+                  number: 3000
+          - path: /?(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: decision-loop-client-srv
+                port:
+                  number: 3000

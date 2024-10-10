@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  annotations:
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-2:186647464304:certificate/335b1249-4a7e-49f9-9d58-fc06a7b37ef8
+spec:
+  ingressClassName: alb
+  rules:
+    - host: app.lendinfra.com
+      http:
+        paths:
+          - path: /api/*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: decision-loop-server-srv
+                port:
+                  number: 3000
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: decision-loop-client-srv
+                port:
+                  number: 3000

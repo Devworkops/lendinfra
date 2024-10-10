@@ -1,0 +1,282 @@
+.react-flow__node-custom {
+    font-size: 10px;
+    width: 180px;
+    background: #f5f5f6;
+    color: #222;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 15%), 0 2px 4px -1px rgb(0 0 0 / 8%);
+    border-radius: 2px;
+  }
+  
+  .react-flow__node-custom .react-flow__handle {
+    top: 24px;
+    right: -15px;
+    width: 6px;
+    height: 10px;
+    border-radius: 2px;
+    background-color: #778899;
+  }
+  
+  .react-flow__node.circle {
+    border-radius: 50%;
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+  }
+  
+  .react-flow__node.square {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    background-color: #FFC73A;
+    background: #FFC73A;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
+    align-items: center;
+    font-weight: 500;
+    font-size:xx-small
+  }
+
+  .react-flow__node.action {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    background-color: #4a2ec8;
+    background: #4a2ec8 ;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
+    align-items: center;
+    font-weight: 500;
+    font-size:xx-small
+  }
+
+  .react-flow__node.dataRecord {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    background-color: hsl(337, 100%, 61%);
+    background: hsl(337, 100%, 61%);
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
+    align-items: center;
+    font-weight: 500;
+    font-size:xx-small
+  }
+
+
+  .react-flow__node.diamond {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    background-color: #FFC73A;
+    background: #FFC73A;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
+    align-items: center;
+    font-weight: 500;
+    font-size:xx-small;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+  .react-flow__node.annotation {
+    border-radius: 0;
+    text-align: left;
+    background: white;
+    border: none;
+    line-height: 1.4;
+    width: 225px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 15%), 0 2px 4px -1px rgb(0 0 0 / 8%);
+  }
+  
+  .react-flow__node.annotation .react-flow__handle {
+    display: none;
+  }
+  
+  .custom-node__header {
+    padding: 8px 10px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  
+  .custom-node__body {
+    padding: 10px;
+  }
+    
+  .custom-node__select {
+    position: relative;
+    margin-bottom: 10px;
+  }
+  
+  .custom-node__select select {
+    width: 100%;
+    margin-top: 5px;
+    font-size: 10px;
+  }
+
+  .edgebutton {
+    width: 20px;
+    height: 20px;
+    background: black;
+    border: 1px solid #bf3434;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 12px;
+    line-height: 1;
+  }
+  
+  .edgebutton:hover {
+    box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.08);
+  }
+  
+  .MuiChip-root.edgeLabel {
+    height:22px;
+    background-color: #e1e1ea;
+  }
+  
+ .react-flow__attribution {
+    display: none;
+  }
+
+  .dndflow {
+    flex-direction: column;
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+  }
+  
+  .dndflow aside {
+    border-right: 1px solid #eee;
+    padding: 15px 10px;
+    font-size: 12px;
+    background: #fcfcfc;
+  }
+  
+  .dndflow .reactflow-wrapper {
+    flex-grow: 1;
+    height: 100%;
+  }
+  .MuiInputBase-input.Mui-disabled {
+    -webkit-text-fill-color: #000000 !important;
+  }
+  .react-flow__node.note {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    background-color: #8dd6ee;
+    background: #8dd6ee ;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
+    align-items: center;
+    font-weight: 500;
+    font-size:xx-small
+  }
+  .react-flow__node.LendXP {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    background-color: #8dd6ee;
+    background: #8dd6ee ;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
+    align-items: center;
+    font-weight: 500;
+    font-size:xx-small
+  }
+  .react-flow__panel.panel-buttons {
+    position: absolute;
+  }
+
+  .react-flow__node.wait {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    background-color: #8dd6ee;
+    background: #8dd6ee ;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
+    align-items: center;
+    font-weight: 500;
+    font-size:xx-small
+  }
+
+  #notification-menu .MuiPaper-root{
+    max-width: 400px;
+    width: 100%;
+    min-width: 120px;
+  }
+
+  #notification-menu .load-more {
+    justify-content: center;
+    border: none !important;
+    text-align: center;
+  }
+  #notification-menu .MuiPaper-root ul.MuiList-root {
+    max-height: 500px;
+  }
+  #notification-menu li.MuiButtonBase-root {
+    text-wrap: wrap;
+    /* margin-bottom: 5px; */
+    display: flex;
+    gap:10px;
+    border: 1px solid #76b9af;
+    border-radius: 10px;
+    margin: 4px;
+  }
+
+.msg{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  padding: 5px 7px;
+}
+
+.noti-count {
+  width: 15px;
+  height: 15px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  font-size: 9px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  position: absolute;
+  top: 10px;
+  right: 5px;
+}
+.sortBy .mui-style-9q3kl4-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input, .sortBy .mui-style-184p1yy {
+  padding: 0px !important;
+}
+
+.sortBy {
+  padding: 6px 30px !important;
+}
+  @media screen and (min-width: 768px) {
+    .dndflow {
+      flex-direction: row;
+    }
+  
+    .dndflow aside {
+      width: 20%;
+      max-width: 250px;
+    }
+  }
+  @media screen and (max-width: 600px) {
+    .mui-style-uujslu-MuiToolbar-root{
+      padding: 0 24px;
+    }
+  }
+  

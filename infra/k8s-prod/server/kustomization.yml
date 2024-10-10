@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - decision-loop-server.yaml
+images:
+  - name: server-prod-image
+    newName: 186647464304.dkr.ecr.eu-west-2.amazonaws.com/server-prod
+    newTag: latest

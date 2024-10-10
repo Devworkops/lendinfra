@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: decision-loop-server-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: decision-loop-server
+  template:
+    metadata:
+      labels:
+        app: decision-loop-server
+    spec:
+      containers:
+        - name: decision-loop-server
+          image: decision-loop/decision-loop-server
+          imagePullPolicy: Never
+          env:
+            - name: MONGO_URI
+              value: 'mongodb+srv://mensari:Cora%401962@cluster0.x9mnl.mongodb.net/CRYPTOdecision-loop?retryWrites=true&w=majority'
+            - name: JWT_KEY
+              value: '2c2d75c898258c26f2039d6951bb96b4'
+            - name: EMAIL_PASSWORD
+              value: 'd&68>SVPZ'
+            - name: "NODE_OPTIONS"
+              value: "--max-old-space-size=6144"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: decision-loop-server-srv
+spec:
+  selector:
+    app: decision-loop-server
+  ports:
+    - name: decision-loop-server
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

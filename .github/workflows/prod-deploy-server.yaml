@@ -1,0 +1,94 @@
+name: Decision Engine Backend - Prod
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'server/**'
+
+env:
+  ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}  # Replace with your ECR registry URL, e.g., 123456789012.dkr.ecr.us-east-1.amazonaws.com
+  IMAGE_NAME: server-prod
+  IMAGE_TAG: latest  # Replace with your desired Docker image tag
+  DEV_DEPLOYMENT_NAME: decision-loop-server-depl
+  PORT: 3000 # Update with Server Port
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+    environment: live
+
+    env:
+      MY_PATH: /usr/bin/python2.7
+      DECISION_ENGINE_DB_URI_PROD: ${{ secrets.DECISION_ENGINE_DB_URI_PROD }}
+      JWT_KEY: ${{ secrets.JWT_KEY_PROD }}
+      EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS_PROD }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD_PROD }}
+      TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+      TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+      MONEYHUB_CLIENT_ID: ${{ secrets.MONEYHUB_CLIENT_ID }}
+      MONEYHUB_CLIENT_SECRET: ${{ secrets.MONEYHUB_CLIENT_SECRET }}
+      QUIDFAIR_CLIENT_URI: ${{ secrets.QUIDFAIR_CLIENT_URI }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}  # Replace with your AWS region, e.g., us-east-1
+
+      - name: Install Docker CLI
+        run: |
+          sudo apt-get update
+          sudo apt install apt-transport-https ca-certificates curl software-properties-common
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
+          sudo apt update
+          sudo apt install docker-ce docker-ce-cli containerd.io
+          sudo systemctl start docker
+          sudo systemctl enable docker
+          docker --version
+
+      - name: Authenticate with EKS
+        run: aws eks update-kubeconfig --name ${{ secrets.PROD_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
+
+      - name: Build and push Docker image to ECR
+        run: |
+          # Log in to ECR
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+
+          # Build the Docker image (change your build commands as necessary)
+          cd server && docker build -f Dockerfile.remote -t ${ECR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} .
+
+          # Push the Docker image to ECR
+          docker push ${ECR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+
+      - name: Set up Kustomize
+        run: |-
+          cd infra/k8s-prod/server
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x kustomize
+
+      - name: Deploy
+        run: |
+          cd infra/k8s-prod/server
+          ./kustomize edit set image ${ECR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}=${ECR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+          ./kustomize edit add secret decision-loop-server-depl --from-literal=decision-engine-db-uri-prod=${DECISION_ENGINE_DB_URI_PROD}
+          ./kustomize edit add secret decision-loop-server-depl --from-literal=jwt-key=${JWT_KEY}
+          ./kustomize edit add secret decision-loop-server-depl --from-literal=port=${PORT}
+          ./kustomize edit add secret decision-loop-server-depl --from-literal=email_address=${EMAIL_ADDRESS}
+          ./kustomize edit add secret decision-loop-server-depl --from-literal=email_password=${EMAIL_PASSWORD}
+          ./kustomize edit add secret decision-loop-server-depl --from-literal=twilio_account_sid=${TWILIO_ACCOUNT_SID}
+          ./kustomize edit add secret decision-loop-server-depl --from-literal=twilio_auth_token=${TWILIO_AUTH_TOKEN}
+          ./kustomize edit add secret decision-loop-server-depl --from-literal=moneyhub_client_id=${MONEYHUB_CLIENT_ID}
+          ./kustomize edit add secret decision-loop-server-depl --from-literal=moneyhub_client_secret=${MONEYHUB_CLIENT_SECRET}
+          ./kustomize edit add secret decision-loop-server-depl --from-literal=quidfair_client_url=${QUIDFAIR_CLIENT_URI}
+          ./kustomize build . | kubectl apply -f -
+          kubectl rollout restart deployment ${DEV_DEPLOYMENT_NAME}
+          kubectl get services -o wide

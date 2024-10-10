@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: decision-loop-server-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: decision-loop-server
+  template:
+    metadata:
+      labels:
+        app: decision-loop-server
+    spec:
+      containers:
+        - name: decision-loop-server
+          image: 186647464304.dkr.ecr.eu-west-2.amazonaws.com/server-prod:latest
+          imagePullPolicy: Always
+          env:
+            - name: "CLIENT_URI"
+              value: "https://app.lendinfra.com/"
+            - name: "ENVIRONMENT"
+              value: "live"
+            - name: "NODE_OPTIONS"
+              value: "--max-old-space-size=6144"
+            # Get it from GitHub secrets
+            - name: "DECISION_ENGINE_DB_URI"
+              valueFrom:
+                secretKeyRef:
+                  name: decision-loop-server-depl
+                  key: decision-engine-db-uri-prod
+            - name: "JWT_KEY"
+              valueFrom:
+                secretKeyRef:
+                  name: decision-loop-server-depl
+                  key: jwt-key
+            - name: "PORT"
+              valueFrom:
+                secretKeyRef:
+                  name: decision-loop-server-depl
+                  key: port
+            - name: "EMAIL_ADDRESS"
+              valueFrom:
+                secretKeyRef:
+                  name: decision-loop-server-depl
+                  key: email_address
+            - name: "EMAIL_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: decision-loop-server-depl
+                  key: email_password
+            - name: "TWILIO_ACCOUNT_SID"
+              valueFrom:
+                secretKeyRef:
+                  name: decision-loop-server-depl
+                  key: twilio_account_sid
+            - name: "TWILIO_AUTH_TOKEN"
+              valueFrom:
+                secretKeyRef:
+                  name: decision-loop-server-depl
+                  key: twilio_auth_token
+            - name: "MONEYHUB_CLIENT_ID"
+              valueFrom:
+                secretKeyRef:
+                  name: decision-loop-server-depl
+                  key: moneyhub_client_id
+            - name: "MONEYHUB_CLIENT_SECRET"
+              valueFrom:
+                secretKeyRef:
+                  name: decision-loop-server-depl
+                  key: moneyhub_client_secret
+            - name: "QUIDFAIR_CLIENT_URI"
+              valueFrom:
+                secretKeyRef:
+                  name: decision-loop-server-depl
+                  key: quidfair_client_url
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: decision-loop-server-srv
+spec:
+  selector:
+    app: decision-loop-server
+  ports:
+    - name: decision-loop-server
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: NodePort

@@ -1,0 +1,1862 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "description": "This is a swagger documentation for decision engine api",
+        "version": "0.0.1",
+        "title": "Decision Engine API",
+        "termsOfService": "https://smartbear.com/terms-of-use/",
+        "contact": {
+            "email": ""
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication"
+        },
+        {
+            "name": "Company"
+        },
+        {
+            "name": "DataModel"
+        },
+        {
+            "name": "DataRecord"
+        }
+    ],
+    "paths": {
+        "/api/users/signIn": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Sign In",
+                "description": "Sign In",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SignInRequest"
+                            },
+                            "example": {
+                                "email": "test@gmail.com",
+                                "password": "Test123"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SignInResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request parameters",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-codegen-request-body-name": "body"
+            }
+        },
+        "/api/users/signOut": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Sign Out",
+                "description": "Sign Out",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SignOutResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request parameters",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-codegen-request-body-name": "body"
+            }
+        },
+        "/api/users/signUp": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Sign Up",
+                "description": "Sign Up",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SignUpRequest"
+                            },
+                            "example": {
+                                "firstName": "FirstName",
+                                "lastName": "LastName",
+                                "email": "Email@gmail.com",
+                                "password": "P@ssword@123"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SignUpResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request parameters",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-codegen-request-body-name": "body"
+            }
+        },
+        "/api/users/getToken": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get Access Token",
+                "description": "Get Access Token",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SignInRequest"
+                            },
+                            "example": {
+                                "email": "test@gmail.com",
+                                "password": "Test123"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TokenResp"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request parameters",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-codegen-request-body-name": "body"
+            }
+        },
+        "/api/users/currentuser": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get the current logged in user",
+                "description": "Get the current logged in user",
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "*/*" : {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CurrentUserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "*/*" : {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/switchCompany": {
+            "put": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Switch company for logged in user",
+                "description": "Switch company for logged in user",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SwitchCompanyRequest"
+                            },
+                            "example": {
+                                "companyId": "123"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "*/*" : {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SwitchCompanyResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request parameters",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/updateroles": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Update roles for a user",
+                "description": "Update roles for a user",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateRoleRequest"
+                            },
+                            "example": {
+                                "id": "123",
+                                "roles": [
+                                    "OPERATOR"
+                                ]
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "*/*" : {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateRoleResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request parameters",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/updateUserInfo/{userId}": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Update user info",
+                "description": "Update user info",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateUserRequest"
+                            },
+                            "example": {
+                                "firstName":"firstName",
+                                "lastName":"lastName"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "*/*" : {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateUserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request parameters",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/company/new": {
+            "post": {
+                "tags": [
+                    "Company"
+                ],
+                "summary": "Add a new company",
+                "description": "Add a new company",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddCompanyRequest"
+                            },
+                            "example": {
+                                "companyName": "companyName",
+                                "industry": "industry",
+                                "country": "country",
+                                "timeZone": "timeZone",
+                                "address": "address"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "*/*" : {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddCompanyResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request parameters",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/company/user/{userId}": {
+            "get": {
+                "tags": [
+                    "Company"
+                ],
+                "summary": "Get all companies of a user",
+                "description": "Get all companies of a user",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "*/*" : {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListCompanyResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request parameters",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/company/{companyId}": {
+            "put": {
+                "tags": [
+                    "Company"
+                ],
+                "summary": "Update company",
+                "description": "Update company",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "companyId",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateCompanyRequest"
+                            },
+                            "example": {
+                                "companyName": "companyName",
+                                "address": "address"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "*/*" : {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateCompanyResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request parameters",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }  ,
+        "/api/datamodel/new": {
+            "post": {
+                "tags": [
+                    "DataModel"
+                ],
+                "summary": "Add a new data model",
+                "description": "Add a new data model",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddDataModelRequest"
+                            },
+                            "example": {
+                                "name": "Test",
+                                "label": "Test",
+                                "description": "Test model",
+                                "company": "6505eb0be1d54fe0394c2781",
+                                "createdBy": "64ef2da93f07c20741ae6643",
+                                "type": "object",
+                                "prefix":"test",
+                                "properties": {
+                                    "stringTypeField": {
+                                        "type": "string"
+                                    },
+                                    "numberTypeField": {
+                                        "type": "number"
+                                    },
+                                    "booleanTypeField": {
+                                        "type": "boolean"
+                                    },
+                                    "arrayTypeField": {
+                                        "type": "array"
+                                    },
+                                    "referenceTypeField": {
+                                        "type": "reference"
+                                    },
+                                    "objectTypeField": {
+                                        "type": "object",
+                                        "properties": {
+                                            "stringTypeField": {
+                                                "type": "string"
+                                            },
+                                            "numberTypeField": {
+                                                "type": "number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "*/*" : {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddDataModelResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request parameters",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/datamodel/all/{companyId}": {
+            "get": {
+                "tags": [
+                    "DataModel"
+                ],
+                "summary": "Get all datamodels by company",
+                "description": "Get all datamodels by company",
+                "parameters":[
+                    {
+                    "in":"path",
+                    "name":"companyId",
+                    "required":true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "*/*" : {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListDataModelResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request parameters",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/datamodel/{datamodelId}": {
+            "put": {
+                "tags": [
+                    "DataModel"
+                ],
+                "summary": "Update datamodel",
+                "description": "Update datamodel",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "datamodelId",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateDataModelRequest"
+                            },
+                            "example": {
+                                "name": "Test",
+                                "description": "Test model",
+                                "company": "6505eb0be1d54fe0394c2781",
+                                "createdBy": "64ef2da93f07c20741ae6643",
+                                "type": "object",
+                                "prefix":"test",
+                                "properties": {
+                                    "stringTypeField": {
+                                        "type": "string"
+                                    },
+                                    "numberTypeField": {
+                                        "type": "number"
+                                    },
+                                    "booleanTypeField": {
+                                        "type": "boolean"
+                                    },
+                                    "arrayTypeField": {
+                                        "type": "array"
+                                    },
+                                    "referenceTypeField": {
+                                        "type": "reference"
+                                    },
+                                    "objectTypeField": {
+                                        "type": "object",
+                                        "properties": {
+                                            "stringTypeField": {
+                                                "type": "string"
+                                            },
+                                            "numberTypeField": {
+                                                "type": "number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "*/*" : {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateDataModelResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request parameters",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } ,
+        "/api/datarecord/new": {
+            "post": {
+                "tags": [
+                    "DataRecord"
+                ],
+                "summary": "Add a new data record",
+                "description": "Add a new data record for the data model",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddDataRecordRequest"
+                            },
+                            "example": {
+                                "objectName": "Test",
+                                "uniqueId": "",
+                                "dataModel": "651c485965aebbf3ac36a5cc",
+                                "company": "6505eb0be1d54fe0394c2781",
+                                "createdBy": "64ef2da93f07c20741ae6643",
+                                "fields": {
+                                    "stringTypeField": "stringValue",
+                                    "numberTypeField": 123,
+                                    "booleanTypeField": true,
+                                    "arrayTypeField": ["12","34"],
+                                    "referenceTypeField": "",
+                                    "objectTypeField": {
+                                            "stringTypeField":  "string",
+                                            "numberTypeField":567
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "*/*" : {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AddDataRecordResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request parameters",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/datarecord/{datarecordId}": {
+            "post": {
+                "tags": [
+                    "DataRecord"
+                ],
+                "summary": "Update a new data record",
+                "description": "Update data record for the data model",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "datarecordId",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateDataRecordRequest"
+                            },
+                            "example": {
+                                "objectName": "Test",
+                                "uniqueId": "",
+                                "dataModel": "651c485965aebbf3ac36a5cc",
+                                "company": "6505eb0be1d54fe0394c2781",
+                                "createdBy": "64ef2da93f07c20741ae6643",
+                                "fields": {
+                                    "stringTypeField": "stringValue",
+                                    "numberTypeField": 123,
+                                    "booleanTypeField": true,
+                                    "arrayTypeField": ["12","34"],
+                                    "referenceTypeField": "",
+                                    "objectTypeField": {
+                                            "stringTypeField":  "string",
+                                            "numberTypeField":567
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "*/*" : {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateDataRecordResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request parameters",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/datarecord/duplicate-check/{companyId}": {
+            "post": {
+                "tags": [
+                    "DataRecord"
+                ],
+                "summary": "Duplicate check for a data record",
+                "description": "Duplicate check for a data record",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "companyId",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DuplicateCheckDataRecordRequest"
+                            },
+                            "example": {
+                                "objectName": "IndividualAccount",
+                                "filters": {
+                                    "Name": "Ankur Tiwari",
+                                    "Email": "ankur@gmail.com",
+                                    "Address": "Gwalior MP",
+                                    "DateOfBirth": "04-10-1991"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "*/*" : {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DuplicateCheckDataRecordResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "invalid request parameters",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "server error",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResp"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "SignInRequest": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SignInResponse": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "token_version": {
+                        "type": "number"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "roles": {
+                        "type": "array"
+                    },
+                    "isActive": {
+                        "type": "boolean"
+                    },
+                    "createdDate": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    },
+                    "company": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SignOutResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SignUpRequest": {
+                "type": "object",
+                "properties": {
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SignUpResponse": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "token_version": {
+                        "type": "number"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "roles": {
+                        "type": "array"
+                    },
+                    "isActive": {
+                        "type": "boolean"
+                    },
+                    "createdDate": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "TokenResp": {
+                "type": "object",
+                "properties": {
+                    "accessToken": {
+                        "type": "string"
+                    }
+                }
+            },
+            "CurrentUserResponse": {
+                "type": "object",
+                "properties": {
+                    "currentUser": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SwitchCompanyRequest": {
+                "type": "object",
+                "properties": {
+                    "companyId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SwitchCompanyResponse": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "token_version": {
+                        "type": "number"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "isActive": {
+                        "type": "boolean"
+                    },
+                    "createdDate": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    },
+                    "company": {
+                        "type": "string"
+                    },
+                    "reset_password_token_expiry": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UpdateRoleRequest": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "UpdateRoleResponse": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "token_version": {
+                        "type": "number"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "isActive": {
+                        "type": "boolean"
+                    },
+                    "createdDate": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UpdateUserRequest": {
+                "type": "object",
+                "properties": {
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UpdateUserResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AddCompanyRequest": {
+                "type": "object",
+                "properties": {
+                    "companyName": {
+                        "type": "string"
+                    },
+                    "industry": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": "string"
+                    },
+                    "timeZone": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AddCompanyResponse": {
+                "type": "object",
+                "properties": {
+                    "companyName": {
+                        "type": "string"
+                    },
+                    "industry": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": "string"
+                    },
+                    "timeZone": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "isActive": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ListCompanyResponse": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "companyName": {
+                            "type": "string"
+                        },
+                        "industry": {
+                            "type": "string"
+                        },
+                        "country": {
+                            "type": "string"
+                        },
+                        "timeZone": {
+                            "type": "string"
+                        },
+                        "address": {
+                            "type": "string"
+                        },
+                        "isActive": {
+                            "type": "string"
+                        },
+                        "createdAt": {
+                            "type": "string"
+                        },
+                        "updatedAt": {
+                            "type": "string"
+                        },
+                        "created_at": {
+                            "type": "string"
+                        },
+                        "updated_at": {
+                            "type": "string"
+                        },
+                        "is_active": {
+                            "type": "boolean"
+                        },
+                        "id": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "UpdateCompanyRequest": {
+                "type": "object",
+                "properties": {
+                    "companyName": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UpdateCompanyResponse": {
+                "type": "object",
+                "properties": {
+                    "companyName": {
+                        "type": "string"
+                    },
+                    "industry": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": "string"
+                    },
+                    "timeZone": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "isActive": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AddDataModelRequest":{
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "label": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "company": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "properties": {
+                        "type": "object"
+                    }
+                }
+            },
+            "AddDataModelResponse":{
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "company": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "properties": {
+                        "type": "object"
+                    },
+                    "isActive": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ListDataModelResponse":{
+                "type": "object",
+                "properties": {
+                    "results": {
+                        "type": "array",
+                        "properties": {
+                            "item": {
+                                "type":"object",
+                                "properties":{
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "prefix": {
+                                        "type": "string"
+                                    },
+                                    "company": {
+                                        "type": "string"
+                                    },
+                                    "createdBy": {
+                                        "type": "object"
+                                    },
+                                    "type": {
+                                        "type": "string"
+                                    },
+                                    "properties": {
+                                        "type": "object"
+                                    },
+                                    "isActive": {
+                                        "type": "boolean"
+                                    },
+                                    "createdAt": {
+                                        "type": "string"
+                                    },
+                                    "updatedAt": {
+                                        "type": "string"
+                                    },
+                                    "id": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "hasNextPage": {
+                        "type": "boolean"
+                    },
+                    "totalPages": {
+                        "type": "number"
+                    },
+                    "totalResults": {
+                        "type": "number"
+                    }
+                }
+            },
+            "UpdateDataModelRequest":{
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "company": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "properties": {
+                        "type": "object"
+                    }
+                }
+            },
+            "UpdateDataModelResponse":{
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "company": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "properties": {
+                        "type": "object"
+                    },
+                    "isActive": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "AddDataRecordRequest":{
+                "type": "object",
+                "properties": {
+                    "objectName": {
+                        "type": "string"
+                    },
+                    "uniqueId": {
+                        "type": "string"
+                    },
+                    "dataModel":{
+                        "type": "string"
+                    },
+                    "company": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "fields": {
+                        "type": "object"
+                    }
+                }
+            },
+            "AddDataRecordResponse":{
+                "type": "object",
+                "properties": {
+                    "objectName": {
+                        "type": "string"
+                    },
+                    "uniqueId": {
+                        "type": "string"
+                    },
+                    "recordId": {
+                        "type": "string"
+                    },
+                    "dataModel": {
+                        "type": "string"
+                    },
+                    "company": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "fields": {
+                        "type": "object"
+                    },
+                    "isActive": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UpdateDataRecordRequest":{
+                "type": "object",
+                "properties": {
+                    "objectName": {
+                        "type": "string"
+                    },
+                    "uniqueId": {
+                        "type": "string"
+                    },
+                    "dataModel":{
+                        "type": "string"
+                    },
+                    "company": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "fields": {
+                        "type": "object"
+                    }
+                }
+            },
+            "UpdateDataRecordResponse":{
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "company": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "properties": {
+                        "type": "object"
+                    },
+                    "isActive": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "DuplicateCheckDataRecordRequest": {
+                "type": "object",
+                "properties": {
+                    "objectName": {
+                        "type": "string"
+                    },
+                    "filters": {
+                        "type": "object",
+                        "properties": {
+                            "Name": {
+                                "type": "string"
+                            },
+                            "Email": {
+                                "type": "string"
+                            },
+                            "Address": {
+                                "type": "string"
+                            },
+                            "DateOfBirth": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "DuplicateCheckDataRecordResponse": {
+                "type": "object",
+                "properties": {
+                    "objectName": {
+                        "type": "string"
+                    },
+                    "uniqueId": {
+                        "type": "string"
+                    },
+                    "primaryKey": {
+                        "type": "string"
+                    },
+                    "recordId": {
+                        "type": "string"
+                    },
+                    "dataModel": {
+                        "type": "string"
+                    },
+                    "company": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "fields": {
+                        "type": "object",
+                        "properties": {
+                            "FirstName": {
+                                "type": "string"
+                            },
+                            "LastName": {
+                                "type": "string"
+                            },
+                            "DateOfBirth": {
+                                "type": "string"
+                            },
+                            "Email": {
+                                "type": "string"
+                            },
+                            "Address": {
+                                "type": "object",
+                                "properties": {
+                                    "HouseNumber": {
+                                        "type": "string"
+                                    },
+                                    "Street": {
+                                        "type": "string"
+                                    },
+                                    "TownOrCity": {
+                                        "type": "string"
+                                    },
+                                    "PostCode": {
+                                        "type": "string"
+                                    },
+                                    "Country": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "isActive": {
+                        "type": "boolean"
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ErrorResp": {
+                "type": "object",
+                "properties": {
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "message": {
+                                    "type": "string"
+                                },
+                                "field": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

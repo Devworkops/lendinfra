@@ -1,0 +1,71 @@
+name: Decision Engine Frontend - Prod
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'client/**'
+
+env:
+  ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}  # Replace with your ECR registry URL, e.g., 123456789012.dkr.ecr.us-east-1.amazonaws.com
+  IMAGE_NAME: client-prod
+  IMAGE_TAG: latest  # Replace with your desired Docker image tag
+  DEV_DEPLOYMENT_NAME: decision-loop-client-depl
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+    environment: live
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}  # Replace with your AWS region, e.g., us-east-1
+
+      - name: Install Docker CLI
+        run: |
+          sudo apt-get update
+          sudo apt install apt-transport-https ca-certificates curl software-properties-common
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list
+          sudo apt update
+          sudo apt install docker-ce docker-ce-cli containerd.io
+          sudo systemctl start docker
+          sudo systemctl enable docker
+          docker --version
+
+      - name: Authenticate with EKS
+        run: aws eks update-kubeconfig --name ${{ secrets.PROD_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
+
+      - name: Build and push Docker image to ECR
+        run: |
+          # Log in to ECR
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+
+          # Build the Docker image (change your build commands as necessary)
+          cd client && docker build -f Dockerfile.remote -t ${ECR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} .
+
+          # Push the Docker image to ECR
+          docker push ${ECR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+
+      - name: Set up Kustomize
+        run: |-
+          cd infra/k8s-prod/client
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+          chmod u+x kustomize
+
+      - name: Deploy
+        run: |
+          cd infra/k8s-prod/client
+          ./kustomize edit set image ${ECR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}=${ECR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+          ./kustomize build . | kubectl apply -f -
+          kubectl rollout restart deployment ${DEV_DEPLOYMENT_NAME}
+          kubectl get services -o wide
